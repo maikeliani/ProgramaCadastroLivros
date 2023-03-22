@@ -71,7 +71,7 @@ internal class Program
                     ReturnCollection();
                     break;
                 case 5:
-                    
+                    Console.WriteLine(RentBook());
                     break;
                 case 6:
                     AddListToFile();
@@ -150,7 +150,7 @@ internal class Program
                 {
                     if (book.Quantity == 0)
                     {
-                        return "Livro indisponivel no momento";
+                        return "Livro(s) indisponivel no momento";
                     }
                     else
                     {
@@ -191,35 +191,36 @@ internal class Program
 
 
 
-        bool RentBook(Book book, int quantity)
+        string RentBook()
         {
-            Console.Write("informe o nome do livro que deseja alugar");
+           
+            Console.Write("informe o nome do livro que deseja alugar: ");
             string bookforRent = Console.ReadLine();
 
             Console.Write("Informe a quantidade desejada: ");
-            string bookQuantity = Console.ReadLine();
+            int bookQuantity = int.Parse(Console.ReadLine());
 
 
-            foreach (Book b in library)
-
-                if ((b.Name == book.Name))
+            for(int x=0; x < library.Count;x++)
+            {
+                if ((library[x].Name.Equals(bookforRent)))
                 {
-                    if (b.Quantity >= 0)
+                    if (library[x].Quantity >= bookQuantity)
                     {
-                        Console.WriteLine(" LIVRO E QUANTIDADE SOLICITADA DISPONIVEIS");
+                        library[x].Quantity -= bookQuantity;
+                                                
                     }
                     else
                     {
-                        Console.WriteLine("QUANTIDADE INDISPONIVEL");
+                        return "QUANTIDADE INDISPONIVEL";
                     }
                 }
                 else
                 {
-                    Console.WriteLine("LIVRO NÃO CADASTRADO.");
+                    return "LIVRO NÃO ENCONTRADO.";
                 }
-
-
-            return true;
+            }
+            return " ALUGADO COM SUCESSO";
         }
 
 
@@ -298,7 +299,7 @@ internal class Program
                 }
                 else
                 {
-                    // string temp = ReadFile(book.ToString());
+                   
                     StreamWriter sw = new StreamWriter("library.txt");
                     sw.WriteLine(book.ToString());
                     sw.Close();
@@ -318,7 +319,7 @@ internal class Program
 
 
 
-        string EditBook(Book book)
+        string EditBook(Book book) // falta implementar
         {
             return null;
         }

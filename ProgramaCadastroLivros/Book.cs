@@ -38,7 +38,7 @@ namespace ProgramaCadastroLivros
 
         public override string ToString()
         {
-            return $" Titulo: {this.Name} | Autor: {this.Author} | Editora: {this.Publisher}  |Isbn: {this.Isbn}";
+            return $" Titulo: {this.Name} | Autor: {this.Author} | Editora: {this.Publisher}  |Isbn: {this.Isbn}  | Quantidade: {this.Quantity}";
         }
 
 
