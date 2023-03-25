@@ -34,7 +34,7 @@ namespace ProgramaCadastroLivros
             // metodo para exibir ao usuario
         public  string textToDisplay()
         {
-            return $"Nome: {Name} \nAutor: {Author} \nEditora: {Publisher} \nIsbn: {Isbn}";
+            return $"Nome: {Name} \nAutor: {Author} \nEditora: {Publisher} \nIsbn: {Isbn}\n\n";
         }
 
 
