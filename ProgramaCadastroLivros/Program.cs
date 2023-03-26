@@ -44,7 +44,7 @@ internal class Program
 
             }
             else
-            {       //arquivo só sera criado quando começar usar o metodo de adicionar liVRO
+            {
                 Console.WriteLine("Carregando arquivo....");
                 Thread.Sleep(1000);
                 return;
@@ -122,7 +122,7 @@ internal class Program
             }
         }
 
-        //ver problemas qdo empresta e desliga  sem clicar no x
+
 
 
 
@@ -131,7 +131,7 @@ internal class Program
             Console.Clear();
             int xpto;
             Console.WriteLine("\n\nMENU DE OPÇÕES\n1- CADASTRAR LIVRO"
-                + "\n2- DELETAR LIVRO\n3- BUSCAR LIVRO\n4- CONSULTA LIVROS DISPONÍVEIS\n5- EMPRESTAR UM LIVRO\n6-CONSULTA LIVROS DEVOLVIDOS\n7- EDITAR LIVRO\n8-DEVOLVER LIVRO\n9- CONSULTA LIVROS EMPRESTADOS" +
+                + "\n2- DELETAR LIVRO\n3- BUSCAR LIVRO\n4- CONSULTA LIVROS DISPONÍVEIS\n5- EMPRESTAR UM LIVRO\n6- CONSULTA LIVROS DEVOLVIDOS\n7- EDITAR LIVRO\n8- DEVOLVER LIVRO\n9- CONSULTA LIVROS EMPRESTADOS" +
                 "\n0- SAIR\nESCOLHA UMA OPÇÃO: \n");
 
 
@@ -200,6 +200,7 @@ internal class Program
                     break;
                 case 9:
                     ConsultBorrowedBooks();
+
                     break;
                 case 0:
                     System.Environment.Exit(0);
@@ -231,8 +232,9 @@ internal class Program
                 {
                     Console.WriteLine(book.textToDisplay());
                 }
+                Thread.Sleep(2000);
             }
-            Console.ReadKey();
+           
         }
 
 
@@ -241,14 +243,13 @@ internal class Program
         string DeleteBook()
         {
 
-
             if (library.Count() == 0)
             {
                 return "Impossível deletar, estoque vazio!";
             }
 
             Console.Write("Informe o ISBN do livro que deseja deletar: ");
-            string bookToDelete = Console.ReadLine();            
+            string bookToDelete = Console.ReadLine();
 
 
             for (int x = 0; x < library.Count; x++)
@@ -301,10 +302,10 @@ internal class Program
             {
                 if (book.Name.Equals(bookToReturn))
                 {
-                    Book aux = book;
-                    returnedList.Add(aux);
-                    borrowedList.Remove(book);
-                    SaveReturnedBookInFile(aux);
+
+                    returnedList.Add(book);
+                    borrowedList.Remove(book); 
+                    AddReturnedBooksInFile(book);
                     UpdateBorrowedBooksFile();
                     return "DEVOLVIDO";
                 }
@@ -377,26 +378,19 @@ internal class Program
                 string publisher = Console.ReadLine();
 
                 Book book = new Book(name, author, publisher, isbn);
+
                 library.Add(book);
-
-                UpdateBooksFile();
-
-
-
+                AddBooksInFile(book);
             }
+
             return "CADASTRADO";
         }
 
 
 
-
-
-
-
-
         string BorrowBook()
         {
-            
+
 
             if (library.Count == 0)
             {
@@ -411,7 +405,7 @@ internal class Program
                 {
                     if (b.Name.Equals(bookToBorrow))
                     {
-                        
+
                         return " já esta emprestado";
                     }
                 }
@@ -420,10 +414,10 @@ internal class Program
                 for (int x = 0; x < library.Count; x++)
                 {
                     if ((library[x].Name.Equals(bookToBorrow)))
-                    {   
-                        Book aux = library[x]; // tentativa por conta do erro de sumir do cadastro geral qdo empresta antes e depois  fecha  programa errado 
+                    {
+                        Book aux = library[x];
                         borrowedList.Add(aux);
-                        UpdateBorrowedBooksFile();
+                        AddToBorrowedBooksFile(aux);
                         return "emprestado";
                     }
                 }
@@ -473,13 +467,8 @@ internal class Program
 
 
 
-       
 
-
-
-
-
-        void UpdateReturnedListFile()   
+        void UpdateReturnedListFile()
         {
             if (returnedList.Count() == 0)
             {
@@ -490,23 +479,22 @@ internal class Program
             {
                 foreach (Book book in returnedList)
                 {
-                    SaveReturnedBookInFile(book);
+                    AddReturnedBooksInFile(book);
                 }
             }
         }
 
 
-        void SaveReturnedBookInFile(Book book)
+        void AddReturnedBooksInFile(Book book)
         {
 
             try
             {
                 if (File.Exists("returnedBooks.txt"))
                 {
-                    //var temp = ReadFile("returnedBooks.txt");
+                    var temp = ReadFile("returnedBooks.txt");
                     StreamWriter sw = new StreamWriter("returnedBooks.txt");
-                    //sw.WriteLine(temp + book.ToString());
-                    sw.WriteLine(book.ToString());
+                    sw.WriteLine(temp + book.ToString());
 
                     sw.Close();
 
@@ -534,28 +522,61 @@ internal class Program
 
 
 
-        void UpdateBorrowedBooksFile()  
+        void UpdateBorrowedBooksFile() 
         {
-            foreach (Book book in borrowedList)
+            if (borrowedList.Count == 0)
             {
-                SaveToBorrowedBooksFile(book); 
+                try
+                {
+
+                    StreamWriter sw = new StreamWriter("borrowed.txt");
+                    
+                    sw.Close();
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
             }
+            else
+            {
+                foreach (Book book in borrowedList)
+                {
+                    RewriteBorrowBooksInFile(book);
+                }
+            }
+           
+
+        }
+
+        void RewriteBorrowBooksInFile(Book book) 
+        {
+            try
+            {
+                StreamWriter sw = new StreamWriter("library.txt");
+                sw.WriteLine(book.ToString());
+
+                sw.Close();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
 
         }
 
 
-
-        void SaveToBorrowedBooksFile(Book book)
+        void AddToBorrowedBooksFile(Book book) 
         {
 
             try
             {
                 if (File.Exists("borrowed.txt"))
                 {
-                   // var temp = ReadFile("borrowed.txt");
+                    var temp = ReadFile("borrowed.txt");
                     StreamWriter sw = new StreamWriter("borrowed.txt");
-                    // sw.WriteLine(temp + book.ToString());
-                    sw.WriteLine(book.ToString());
+                    sw.WriteLine(temp + book.ToString());
                     sw.Close();
 
                 }
@@ -571,37 +592,55 @@ internal class Program
             {
                 throw;
             }
-            finally
+
+        }
+
+
+
+        void UpdateBooksFile()
+        {
+
+
+            foreach (Book item in library)
             {
-                Console.WriteLine("Cadastrado no arquivo de livros emprestados com sucesso!");
-                Thread.Sleep(1000);
+
+                RewriteBooksInFile(item);
             }
 
         }
 
 
-      
-        void UpdateBooksFile() 
+
+        void RewriteBooksInFile(Book book)
         {
-            foreach (Book book in library)
+            try
             {
-                SaveBooksInFile(book);
+                StreamWriter sw = new StreamWriter("library.txt");
+                sw.WriteLine(book.ToString());
+
+                sw.Close();
+            }
+            catch (Exception)
+            {
+                throw;
             }
 
         }
 
 
-        void SaveBooksInFile(Book book)
-        {
 
+
+        void AddBooksInFile(Book book)
+        {
 
             try
             {
                 if (File.Exists("library.txt"))
                 {
-                    ReadFile("library.txt");
+                    var temp = ReadFile("library.txt");
                     StreamWriter sw = new StreamWriter("library.txt");
-                    sw.WriteLine(book.ToString());                    
+                    sw.WriteLine(temp + book.ToString());
+
                     sw.Close();
 
                 }
@@ -612,16 +651,13 @@ internal class Program
                     sw.WriteLine(book.ToString());
                     sw.Close();
                 }
+
             }
             catch (Exception)
             {
                 throw;
             }
-            finally
-            {
-                Console.WriteLine("Cadastrado no arquivo com sucesso!");
-                Thread.Sleep(1000);
-            }
+
 
         }
 
