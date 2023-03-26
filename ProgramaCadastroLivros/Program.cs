@@ -29,18 +29,21 @@ internal class Program
             {
                 StreamReader sr = new StreamReader("library.txt");
 
-                do
+                if (sr.Read() != -1)
                 {
-                    retorno = sr.ReadLine().Split(';');
-                    string name = retorno[0];
-                    string author = retorno[1];
-                    string publisher = retorno[2];
-                    string isbn = retorno[3];
-                    Book book = new Book(name, author, publisher, isbn);
-                    library.Add(book);
-                    sr.ReadLine();
-                } while (!sr.EndOfStream);
-                sr.Close();
+                    do
+                    {
+                        retorno = sr.ReadLine().Split(';');
+                        string name = retorno[0];
+                        string author = retorno[1];
+                        string publisher = retorno[2];
+                        string isbn = retorno[3];
+                        Book book = new Book(name, author, publisher, isbn);
+                        library.Add(book);
+                        sr.ReadLine();
+                    } while (!sr.EndOfStream);
+                    sr.Close();
+                }
 
             }
             else
@@ -63,21 +66,22 @@ internal class Program
             {
                 StreamReader sr = new StreamReader("borrowed.txt");
 
-
-                do
+                if (sr.Read() != -1)
                 {
-                    retorno = sr.ReadLine().Split(';');
-                    string name = retorno[0];
-                    string author = retorno[1];
-                    string publisher = retorno[2];
-                    string isbn = retorno[3];
-                    Book book = new Book(name, author, publisher, isbn);
-                    borrowedList.Add(book);
-                    sr.ReadLine();
-                } while (!sr.EndOfStream);
-                sr.Close();
-
-
+                    do
+                    {
+                        retorno = sr.ReadLine().Split(';');
+                        string name = retorno[0];
+                        string author = retorno[1];
+                        string publisher = retorno[2];
+                        string isbn = retorno[3];
+                        Book book = new Book(name, author, publisher, isbn);
+                        borrowedList.Add(book);
+                        sr.ReadLine();
+                    } while (!sr.EndOfStream);
+                    sr.Close();
+                }
+               
             }
             else
             {
@@ -98,21 +102,21 @@ internal class Program
             {
                 StreamReader sr = new StreamReader("returnedBooks.txt");
 
-
-                do
+                if (sr.Read() != -1)
                 {
-                    retorno = sr.ReadLine().Split(';');
-                    string name = retorno[0];
-                    string author = retorno[1];
-                    string publisher = retorno[2];
-                    string isbn = retorno[3];
-                    Book book = new Book(name, author, publisher, isbn);
-                    returnedList.Add(book);
-                    sr.ReadLine();
-                } while (!sr.EndOfStream);
-                sr.Close();
-
-
+                    do
+                    {
+                        retorno = sr.ReadLine().Split(';');
+                        string name = retorno[0];
+                        string author = retorno[1];
+                        string publisher = retorno[2];
+                        string isbn = retorno[3];
+                        Book book = new Book(name, author, publisher, isbn);
+                        returnedList.Add(book);
+                        sr.ReadLine();
+                    } while (!sr.EndOfStream);
+                    sr.Close();
+                }
             }
             else
             {
